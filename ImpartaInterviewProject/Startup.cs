@@ -32,7 +32,8 @@ namespace ImpartaInterviewProject
 			var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="
 								   + currentDirectory 
 								   + "\\App_Data\\Database.mdf;Integrated Security=True";
-			
+	
+
 			services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
 			//Enable CORS
