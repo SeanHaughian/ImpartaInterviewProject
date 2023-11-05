@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,7 +28,12 @@ namespace ImpartaInterviewProject
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<Context>(options => options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=True;"));
+			var currentDirectory = Directory.GetCurrentDirectory();
+			var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="
+								   + currentDirectory 
+								   + "\\App_Data\\Database.mdf;Integrated Security=True";
+			
+			services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
 			//Enable CORS
 			services.AddCors(c =>
