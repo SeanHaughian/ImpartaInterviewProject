@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/ImpartaInterviewProject/App_Data/Database.mdf
+/ImpartaInterviewProject/App_Data/Database_log.ldf
