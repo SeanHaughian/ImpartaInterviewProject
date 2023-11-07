@@ -9,11 +9,11 @@ export class Tasks extends Component {
         this.state = {
             tasks:[],
             modalTitle:"",
-            modalTaskID: "",
-            modalTaskDescription: "",
-            modalTaskStatus: "",
-            modalTaskType: "",
-            modalTaskPriority: ""
+            taskID: "",
+            taskDescription: "",
+            taskStatus: "",
+            taskType: "",
+            taskPriority: ""
         }
     }
 
@@ -31,9 +31,12 @@ export class Tasks extends Component {
 
     addClick() {
     this.setState({
-        modalTitle:"Add Department",
-        modalTaskID:0,
-        modalTaskDescription:""
+        modalTitle:"Add Task",
+        taskID:0,
+        taskDescription:"",
+        taskStatus:"",
+        taskType:"",
+        taskPriority:""
     });
     }
 
@@ -41,39 +44,73 @@ export class Tasks extends Component {
     editClick(task) {
         this.setState({
             modalTitle:"Edit Department",
-            modalTaskID:task.id,
-            modalTaskDescription:task.description
+            taskID:task.id,
+            taskDescription:task.description
         });
         }
     
+    editTaskDescription = (e) => {
+        this.setState({taskDescription:e.target.value});
+    }
 
-    editTask = (e) => {
-        this.setState({modalTaskDescription:e.target.value});
+    editTaskStatus = (e) => {
+        this.setState({taskStatus:e.target.value});
+    }
+
+    editTaskType = (e) => {
+        this.setState({taskType:e.target.value});
+    }
+
+    editTaskPriority = (e) => {
+        this.setState({taskPriority:e.target.value});
+    }
+
+    createClick(){
+        fetch(variables.API_URL+'tasks',{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                description:this.state.taskDescription,
+                status:this.state.taskStatus,
+                type:this.state.taskType,
+                priority:this.state.taskPriority
+            })
+        })
+        .then(res=>res.json())
+        .then((result)=>{
+            alert(result);
+            this.refreshList();
+        },(error)=>{
+            alert('Failed');
+        })
     }
 
     render() {
         const {
             tasks,
             modalTitle,
-            modalTaskID,
-            modalTaskDescription,
-            modalTaskStatus,
-            modalTaskType,
-            modalTaskPriority
+            taskID,
+            taskDescription,
+            taskStatus,
+            taskType,
+            taskPriority
 
         }=this.state;
         return(
             <div>
             <table className="table table-stripped">
-                <button type="button" className="btn btn-primary m-2 float-end"
-                data-bs-toggle="modal"
-                data-bs-toggle-target="#exampleModal"
-                onClick={()=>this.addClick()}>
+                <button type="button"
+                    className="btn btn-light mr-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={()=>this.addClick()}>
                     Add Task
                 </button>
             <thead>
             <tr>
-
                 <th>
                     Task ID
                 </th>
@@ -103,8 +140,8 @@ export class Tasks extends Component {
                         <td>
                         <button type="button" className="btn btn-light mr-1"
                         data-bs-toggle="modal"
-                        data-bs-toggle-target="#exampleModal"
-                        onClick={()=>this.editClick()}>
+                        data-bs-target="#exampleModal"
+                        onClick={()=>this.editClick(task)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -145,18 +182,30 @@ export class Tasks extends Component {
 
               <div className="modal-body">
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Task Description</span>
                     <input type="text" className="form-control"
-                        value={modalTaskDescription}
-                        onChange={this.editTask}/>
-                    
-                    {modalTaskID==0 ?
-                    <button type="button" className="btn btn-primary float-start">
+                        placeholder="Description"
+                        value={taskDescription}
+                        onChange={this.editTaskDescription}/>
+                    <input type="text" className="form-control"
+                        placeholder="Status"
+                        value={taskStatus}
+                        onChange={this.editTaskStatus}/>
+                    <input type="text" className="form-control"
+                        placeholder="Type"
+                        value={taskType}
+                        onChange={this.editTaskType}/>
+                    <input type="text" className="form-control"
+                        placeholder="Priority"
+                        value={taskPriority}
+                        onChange={this.editTaskPriority}/>
+                    {taskID==0 ?
+                    <button type="button" className="btn btn-primary float-start"
+                    onClick={() => this.createClick()}>
                         Create
                     </button> : null
                     }
 
-                    {modalTaskID!=0 ?
+                    {taskID!=0 ?
                     <button type="button" className="btn btn-primary float-start">
                         Update
                     </button> : null
