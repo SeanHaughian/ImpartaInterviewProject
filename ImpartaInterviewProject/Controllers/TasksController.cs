@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ImpartaInterviewProject.Controllers
 {
@@ -42,13 +43,20 @@ namespace ImpartaInterviewProject.Controllers
 		}
 
 		[HttpPut]
-		public JsonResult Put(Tasks task)
+		public JsonResult Put(Tasks updatedTask)
 		{
 			try
 			{
+				var task = GetTaskByDescription(updatedTask.Description);
+				task.Description = updatedTask.Description;
+				task.Priority = updatedTask.Priority;
+				task.Status = updatedTask.Status;
+				task.Type = updatedTask.Type;
+
 				_context.Tasks.Update(task);
 				_context.SaveChanges();
-				return new JsonResult(string.Format($"Updated task {0} successfully", task.Description));
+
+				return new JsonResult(String.Format("Updated task {0} successfully", task.Description));
 			} catch(Exception e)
 			{
 				throw new Exception(e.ToString());
@@ -60,19 +68,33 @@ namespace ImpartaInterviewProject.Controllers
 		{
 			try
 			{
-				var tasks = _context
-				.Tasks
-				.Where(x => x.ID == id)
-				.FirstOrDefault();
+				var task = GetTaskById(id);
+				var taskDescription = task.Description;
 
-				_context.Tasks.Remove(tasks);
+				_context.Tasks.Remove(task);
 				_context.SaveChanges();
 
-				return new JsonResult(string.Format($"Deleted task-id {0} successfully", id));
+				return new JsonResult(String.Format("Deleted task {0} successfully", taskDescription));
 			} catch (Exception e)
 			{
 				throw new Exception(e.ToString());
 			}
+		}
+
+		private Tasks GetTaskByDescription(string description)
+		{
+			return _context
+				.Tasks
+				.Where(x => x.Description == description)
+				.FirstOrDefault();
+		}
+
+		private Tasks GetTaskById(int id)
+		{
+			return _context
+				.Tasks
+				.Where(x => x.ID == id)
+				.FirstOrDefault();
 		}
 	}
 }
