@@ -34,8 +34,8 @@ export class Tasks extends Component {
         modalTitle:"Add Task",
         taskID:0,
         taskDescription:"",
-        taskStatus:"",
-        taskType:"",
+        taskStatus:"In Progress",
+        taskType:"Bug",
         taskPriority:""
     });
     }
@@ -238,7 +238,7 @@ export class Tasks extends Component {
               <div className="modal-body">
                 <div className="input-group mb-3">
                     {taskID==0 ?
-                        <input type="text" className="form-control"
+                    <input type="text" className="form-control"
                         placeholder="Description"
                         value={taskDescription}
                         onChange={this.editTaskDescription}/>
@@ -246,18 +246,26 @@ export class Tasks extends Component {
                     {taskID!=0 ?
                         <span className="input-group-text">{taskDescription}</span>
                     : null }
-                    <input type="text" className="form-control"
-                        placeholder="Status"
-                        value={taskStatus}
-                        onChange={this.editTaskStatus}/>
-                    <input type="text" className="form-control"
-                        placeholder="Type"
-                        value={taskType}
-                        onChange={this.editTaskType}/>
-                    <input type="text" className="form-control"
-                        placeholder="Priority"
-                        value={taskPriority}
-                        onChange={this.editTaskPriority}/>
+                    <select value={taskStatus} onChange={this.editTaskStatus}>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Open">Open</option>
+                        <option value="QA Ready">QA Ready</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    <select value={taskType} onChange={this.editTaskType}>
+                        <option value="Bug">Bug</option>
+                        <option value="Epic">Epic</option>
+                        <option value="Spike">Spike</option>
+                        <option value="Task">Task</option>
+                    </select>
+                    <select value={taskPriority} onChange={this.editTaskPriority}>
+                        <option value=""></option>
+                        <option value="Minor">Minor</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="Major">Major</option>
+                        <option value="Critical">Critical</option>
+                    </select>
                     {taskID==0 ?
                     <button type="button" className="btn btn-primary float-start"
                     onClick={() => this.createClick()}>
