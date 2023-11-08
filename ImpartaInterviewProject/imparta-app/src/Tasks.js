@@ -197,7 +197,11 @@ export class Tasks extends Component {
             <tbody>
                 {statuses.map(status => 
                     <tr key={status.status}>
-                        <td>{status.status}</td>
+                        <td>
+                        {status.status==='In Progress' ? <p style={{color: 'red', fontWeight: 'bold'}}>{status.status}</p> : null}
+                            {status.status==='Completed' ? <p style={{color: 'green', fontWeight: 'bold'}}>{status.status}</p> : null}
+                            {status.status==='Pending' ? <p style={{color: 'purple', fontWeight: 'bold'}}>{status.status}</p> : null}
+                        </td>
                         <td>{status.count}</td>
                     </tr>)}
             </tbody>
@@ -237,7 +241,11 @@ export class Tasks extends Component {
                     <tr key={task.id}>
                         <td>{task.id}</td>
                         <td>{task.description}</td>
-                        <td>{task.status}</td>
+                        <td>
+                            {task.status==='In Progress' ? <p style={{color: 'red', fontWeight: 'bold'}}>{task.status}</p> : null}
+                            {task.status==='Completed' ? <p style={{color: 'green', fontWeight: 'bold'}}>{task.status}</p> : null}
+                            {task.status==='Pending' ? <p style={{color: 'purple', fontWeight: 'bold'}}>{task.status}</p> : null}
+                        </td>
                         <td>{task.type}</td>
                         <td>{task.priority}</td>
                         <td>
