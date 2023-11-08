@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[Tasks] (
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
-    [Description] NVARCHAR (255) UNIQUE NOT NULL,
+    [Description] NVARCHAR (255) NOT NULL,
     [Status]      NVARCHAR (255) NOT NULL,
     [Type]        NVARCHAR (255) NOT NULL,
     [Priority]    NVARCHAR (255)

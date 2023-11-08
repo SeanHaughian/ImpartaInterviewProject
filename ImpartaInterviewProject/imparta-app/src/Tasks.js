@@ -8,6 +8,7 @@ export class Tasks extends Component {
 
         this.state = {
             tasks:[],
+            statuses:[],
             modalTitle:"",
             taskID: "",
             taskDescription: "",
@@ -22,6 +23,7 @@ export class Tasks extends Component {
         .then(response => response.json())
         .then(data => {
             this.setState({tasks:data.tasks});
+            this.setState({statuses:data.statuses});
         })
     }
 
@@ -33,9 +35,9 @@ export class Tasks extends Component {
     this.setState({
         modalTitle:"Add Task",
         taskID:0,
-        taskDescription:"",
-        taskStatus:"In Progress",
-        taskType:"Bug",
+        taskDescription:null,
+        taskStatus:"",
+        taskType:"",
         taskPriority:""
     });
     }
@@ -69,6 +71,10 @@ export class Tasks extends Component {
     }
 
     createClick(){
+        if (!this.isInputValid())
+        {
+            return;
+        }
         fetch(variables.API_URL+'tasks',{
             method:'POST',
             headers:{
@@ -91,7 +97,27 @@ export class Tasks extends Component {
         })
     }
 
+    isInputValid() {
+        if (this.state.taskDescription < 5) {
+            alert("Description is too short. Please enter atleast 5 characters.");
+            return false;
+          }
+          else if (this.state.taskStatus < 1) {
+            alert("Status is too short. Please enter a selection.");
+            return false;
+          }
+          else if (this.state.taskType < 1) {
+            alert("Type is too short. Please enter a selection.");
+            return false;
+          }
+        return true;
+    }
+
     updateClick(){
+        if (!this.isInputValid())
+        {
+            return;
+        }
         fetch(variables.API_URL+'tasks',{
             method:'PUT',
             headers:{
@@ -99,6 +125,7 @@ export class Tasks extends Component {
                 'Content-Type':'application/json'
             },
             body:JSON.stringify({
+                id:this.state.taskID,
                 description:this.state.taskDescription,
                 status:this.state.taskStatus,
                 type:this.state.taskType,
@@ -150,11 +177,33 @@ export class Tasks extends Component {
             taskDescription,
             taskStatus,
             taskType,
-            taskPriority
+            taskPriority,
+            statuses
 
         }=this.state;
         return(
             <div>
+            <table className="table table-stripped">
+            <thead>
+            <tr>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Count
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                {statuses.map(status => 
+                    <tr key={status.status}>
+                        <td>{status.status}</td>
+                        <td>{status.count}</td>
+                    </tr>)}
+            </tbody>
+
+
+            </table>
             <table className="table table-stripped">
                 <button type="button"
                     className="btn btn-light mr-1"
@@ -237,21 +286,19 @@ export class Tasks extends Component {
 
               <div className="modal-body">
                 <div className="input-group mb-3">
-                    {taskID==0 ?
                     <input type="text" className="form-control"
                         placeholder="Description"
                         value={taskDescription}
-                        onChange={this.editTaskDescription}/>
-                    : null }
-                    {taskID!=0 ?
-                        <span className="input-group-text">{taskDescription}</span>
-                    : null }
+                        onChange={this.editTaskDescription}
+                        required/>
                     <select value={taskStatus} onChange={this.editTaskStatus}>
+                        <option value=""></option>
                         <option value="In Progress">In Progress</option>
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
                     </select>
                     <select value={taskType} onChange={this.editTaskType}>
+                        <option value=""></option>
                         <option value="Bug">Bug</option>
                         <option value="Epic">Epic</option>
                         <option value="Spike">Spike</option>
@@ -278,6 +325,9 @@ export class Tasks extends Component {
                     </button> : null
                     }
                 </div>
+                {taskDescription <= 5 && <p>Description must be at least 5 characters long</p>}
+                {taskStatus == 0 && <p>Status must be selected</p>}
+                {taskType == 0 && <p>Type must be at least 5 characters long</p>}
               </div>
             </div>
           </div>

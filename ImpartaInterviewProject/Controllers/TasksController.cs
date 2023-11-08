@@ -69,7 +69,7 @@ namespace ImpartaInterviewProject.Controllers
 		{
 			try
 			{
-				var task = GetTaskByDescription(updatedTask.Description);
+				var task = GetTaskById(updatedTask.ID);
 				task.Description = updatedTask.Description;
 				task.Priority = updatedTask.Priority;
 				task.Status = updatedTask.Status;
@@ -101,14 +101,6 @@ namespace ImpartaInterviewProject.Controllers
 			{
 				throw new Exception(e.ToString());
 			}
-		}
-
-		private Tasks GetTaskByDescription(string description)
-		{
-			return _context
-				.Tasks
-				.Where(x => x.Description == description)
-				.FirstOrDefault();
 		}
 
 		private Tasks GetTaskById(int id)
