@@ -1,9 +1,11 @@
 ﻿using ImpartaInterviewProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace ImpartaInterviewProject.Controllers
@@ -15,6 +17,12 @@ namespace ImpartaInterviewProject.Controllers
 		private readonly IConfiguration _configuration;
 		private readonly Context _context;
 
+		private struct TaskData
+		{
+			public object Tasks { get; set; }
+			public object Statuses { get; set; }
+		}
+
 		public TasksController(IConfiguration configuration, Context context)
 		{
 			_context = context;
@@ -25,7 +33,21 @@ namespace ImpartaInterviewProject.Controllers
 		public JsonResult GetAll()
 		{
 			var tasks = _context.Tasks.ToList();
-			return new JsonResult(tasks);
+
+			var statuses = tasks.GroupBy(p => p.Status)
+				.Select(group => new
+				{
+					Status = group.Key,
+					Count = group.Count()
+				}).ToList();
+
+			var resultData = new TaskData
+			{
+				Tasks = tasks,
+				Statuses = statuses
+			};
+
+			return new JsonResult(resultData);
 		}
 
 		[HttpPost]

@@ -21,7 +21,7 @@ export class Tasks extends Component {
         fetch(variables.API_URL+'tasks')
         .then(response => response.json())
         .then(data => {
-            this.setState({tasks:data});
+            this.setState({tasks:data.tasks});
         })
     }
 
@@ -248,8 +248,6 @@ export class Tasks extends Component {
                     : null }
                     <select value={taskStatus} onChange={this.editTaskStatus}>
                         <option value="In Progress">In Progress</option>
-                        <option value="Open">Open</option>
-                        <option value="QA Ready">QA Ready</option>
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
                     </select>
