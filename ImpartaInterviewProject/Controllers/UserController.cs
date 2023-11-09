@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ImpartaInterviewProject.Controllers
 {
@@ -49,11 +50,14 @@ namespace ImpartaInterviewProject.Controllers
 			try
 			{
 				user = HashUser(user);
-				if (!IsValidUser(user))
+				user = GetUser(user);
+
+				if (user == null)
 				{
-					return new JsonResult(-1);
+					return new JsonResult("-1");
 				}
-				return new JsonResult(user.ID);
+
+				return new JsonResult(user);
 			}
 			catch (Exception e)
 			{
@@ -63,7 +67,7 @@ namespace ImpartaInterviewProject.Controllers
 
 		[Route("SaveProfilePhoto")]
 		[HttpPost]
-		public JsonResult SaveFile()
+		public JsonResult SaveFile(Guid id)
 		{
 			try
 			{
@@ -77,25 +81,37 @@ namespace ImpartaInterviewProject.Controllers
 					postedFile.CopyTo(stream);
 				}
 
+				var user = GetUserById(id);
+				user.PhotoFileName = fileName;
+				_context.Users.Update(user);
+				_context.SaveChanges();
+
 				return new JsonResult(fileName);
+
+
 			}
 			catch (Exception) {
 				return new JsonResult("anonymous.png");
 			}
 		}
 
+		private User GetUserById(Guid id)
+		{
+			return _context.Users.Where(x => x.ID == id).FirstOrDefault();
+		}
+
+
 		[HttpGet]
 		public JsonResult GetUser(Guid id)
 		{
-			var user = _context.Users.Where(x => x.ID == id).FirstOrDefault();
-			return new JsonResult(user);
+			return new JsonResult(GetUserById(id));
 		}
 
-		private bool IsValidUser(User user)
+		private User GetUser(User user)
 		{
 			return _context
 				.Users.Where(x => x.Email.Equals(user.Email) && x.Password.Equals(user.Password))
-				.Count() == 1;
+				.FirstOrDefault();
         }
 
 		private User HashUser(User user)

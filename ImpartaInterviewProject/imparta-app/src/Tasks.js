@@ -16,10 +16,12 @@ export class Tasks extends Component {
       taskStatus: "",
       taskType: "",
       taskPriority: "",
-      userID: this.props.history.location.state,
+      userID: "",
       userEmail: "",
-      userPhotoFileName: "",
-      userPhotoPath: variables.PHOTOS_URL
+      userForename: "",
+      userSurname: "",
+      userPhotoPath: variables.PHOTOS_URL,
+      userPhotoFileName: ""
     };
   }
 
@@ -31,12 +33,14 @@ export class Tasks extends Component {
         this.setState({ statuses: data.statuses });
       });
 
-      fetch(variables.API_URL + "user?id="+1)
+      fetch(variables.API_URL + "user?id="+window.localStorage.getItem("token"))
       .then((response) => response.json())
       .then((data) => {
         this.setState({ userID: data.id });
         this.setState({ userEmail: data.email });
-        this.setState({ userPhotoFileName: data.photofilename });
+        this.setState({ userForename: data.firstname });
+        this.setState({ userSurname: data.surname });
+        this.setState({ userPhotoFileName: data.photoFileName });
       });
   }
 
@@ -199,7 +203,7 @@ export class Tasks extends Component {
     const formData=new FormData();
     formData.append("file",e.target.files[0],e.target.files[0].name);
 
-    fetch(variables.API_URL+'user/SaveProfilePhoto',{
+    fetch(variables.API_URL+'user/SaveProfilePhoto?id='+this.state.userID,{
         method:'POST',
         body:formData
     })
@@ -208,6 +212,7 @@ export class Tasks extends Component {
         this.setState({userPhotoFileName:data});
     })
 }
+
   render() {
     const {
       tasks,
@@ -219,16 +224,18 @@ export class Tasks extends Component {
       taskType,
       taskPriority,
       statuses,
+      userID,
       userEmail,
-      userPhotoFileName,
-      userPhotoPath
-    } = this.state;
+      userForename,
+      userSurname,
+      userPhotoPath,
+      userPhotoFileName
+        } = this.state;
     return (
       <div>
-                    <h1>Welcome back {userEmail}</h1>
+                    <h1>Welcome back {userForename} {userSurname}</h1>
 
                     <div className="p-2 w-50 bd-highlight">
-                        <p>{userPhotoPath}{userPhotoFileName}</p>
                     <img width="250px" height="250px"
                         src={userPhotoPath+userPhotoFileName}
                     />

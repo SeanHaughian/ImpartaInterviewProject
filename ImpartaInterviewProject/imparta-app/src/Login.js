@@ -34,11 +34,11 @@ export class Login extends Component {
             }
             else
             {
-                console.log(result);
-                this.props.history.push({
-                    pathname: '/tasks',
-                    state: result,
-                  });
+              window.localStorage.setItem("token", result.id);
+              window.localStorage.setItem("isLoggedIn", result)
+              this.props.history.push({
+                  pathname: '/tasks',
+                });
             }
         },
         (error) => {
