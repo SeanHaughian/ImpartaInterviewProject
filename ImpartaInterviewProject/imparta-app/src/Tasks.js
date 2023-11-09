@@ -524,7 +524,7 @@ export class Tasks extends Component {
                 </div>
               </div>
             </div>
-          ) : null}
+          ) : this.logoutClick()}
         </div>
       </div>
     );
