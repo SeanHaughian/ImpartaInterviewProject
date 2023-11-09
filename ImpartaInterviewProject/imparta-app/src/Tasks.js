@@ -21,21 +21,21 @@ export class Tasks extends Component {
       userForename: "",
       userSurname: "",
       userPhotoPath: variables.PHOTOS_URL,
-      userPhotoFileName: ""
+      userPhotoFileName: "",
     };
   }
 
   refreshList() {
     let tokenID = window.localStorage.getItem("token");
 
-    fetch(variables.API_URL + "tasks?userID="+tokenID)
+    fetch(variables.API_URL + "tasks?userID=" + tokenID)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ tasks: data.tasks });
         this.setState({ statuses: data.statuses });
       });
 
-      fetch(variables.API_URL + "user?id="+tokenID)
+    fetch(variables.API_URL + "user?id=" + tokenID)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ userID: data.id });
@@ -110,7 +110,7 @@ export class Tasks extends Component {
         status: this.state.taskStatus,
         type: this.state.taskType,
         priority: this.state.taskPriority,
-        userID: this.state.userID
+        userID: this.state.userID,
       }),
     })
       .then((res) => res.json())
@@ -121,7 +121,7 @@ export class Tasks extends Component {
         },
         (error) => {
           alert("Failed");
-        }
+        },
       );
   }
 
@@ -140,10 +140,10 @@ export class Tasks extends Component {
   }
 
   logoutClick() {
-    window.localStorage.setItem("isLoggedIn", false)
-              this.props.history.push({
-                  pathname: '/login',
-                });
+    window.localStorage.setItem("isLoggedIn", false);
+    this.props.history.push({
+      pathname: "/login",
+    });
   }
 
   updateClick() {
@@ -173,7 +173,7 @@ export class Tasks extends Component {
         },
         (error) => {
           alert("Failed");
-        }
+        },
       );
   }
 
@@ -202,26 +202,26 @@ export class Tasks extends Component {
           },
           (error) => {
             alert("Failed");
-          }
+          },
         );
     }
   }
 
-  profileImageUpload=(e)=>{
+  profileImageUpload = (e) => {
     e.preventDefault();
 
-    const formData=new FormData();
-    formData.append("file",e.target.files[0],e.target.files[0].name);
+    const formData = new FormData();
+    formData.append("file", e.target.files[0], e.target.files[0].name);
 
-    fetch(variables.API_URL+'user/SaveProfilePhoto?id='+this.state.userID,{
-        method:'POST',
-        body:formData
+    fetch(variables.API_URL + "user/SaveProfilePhoto?id=" + this.state.userID, {
+      method: "POST",
+      body: formData,
     })
-    .then(res=>res.json())
-    .then(data=>{
-        this.setState({userPhotoFileName:data});
-    })
-}
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ userPhotoFileName: data });
+      });
+  };
 
   render() {
     const {
@@ -239,274 +239,292 @@ export class Tasks extends Component {
       userForename,
       userSurname,
       userPhotoPath,
-      userPhotoFileName
-        } = this.state;
+      userPhotoFileName,
+    } = this.state;
     return (
       <div>
-                    <h1>Welcome back {userForename} {userSurname}</h1>
+        <div>
+          {window.localStorage.getItem("isLoggedIn") === "true" ? (
+            <div>
+              <h1>
+                Welcome back {userForename} {userSurname}
+              </h1>
 
-                    <div className="p-2 w-50 bd-highlight">
-                    <img width="250px" height="250px"
-                        src={userPhotoPath+userPhotoFileName}
-                    />
-                    <input className="m-2" type="file" onChange={this.profileImageUpload}></input>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => this.logoutClick()}
-                  >Logout</button>   
-                    </div>
-            
-        <table className="table table-stripped">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {statuses.map((status) => (
-              <tr key={status.status}>
-                <td>
-                  {status.status === "In Progress" ? (
-                    <p style={{ color: "red", fontWeight: "bold" }}>
-                      {status.status}
-                    </p>
-                  ) : null}
-                  {status.status === "Completed" ? (
-                    <p style={{ color: "green", fontWeight: "bold" }}>
-                      {status.status}
-                    </p>
-                  ) : null}
-                  {status.status === "Pending" ? (
-                    <p style={{ color: "purple", fontWeight: "bold" }}>
-                      {status.status}
-                    </p>
-                  ) : null}
-                </td>
-                <td>{status.count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table className="table table-stripped">
-          <button
-            type="button"
-            className="btn btn-light mr-1"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            onClick={() => this.addClick()}
-          >
-            Add Task
-          </button>
-          <thead>
-            <tr>
-            <th>Task ID</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Type</th>
-              <th>Priority</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task) => (
-              <tr key={task.id}>
-                <td>{task.id}</td>
-                <td>{task.name}</td>
-                <td>
-                  {task.status === "In Progress" ? (
-                    <p style={{ color: "red", fontWeight: "bold" }}>
-                      {task.status}
-                    </p>
-                  ) : null}
-                  {task.status === "Completed" ? (
-                    <p style={{ color: "green", fontWeight: "bold" }}>
-                      {task.status}
-                    </p>
-                  ) : null}
-                  {task.status === "Pending" ? (
-                    <p style={{ color: "purple", fontWeight: "bold" }}>
-                      {task.status}
-                    </p>
-                  ) : null}
-                </td>
-                <td>{task.type}</td>
-                <td>{task.priority}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-light mr-1"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={() => this.editClick(task)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-pencil-square"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                      />
-                    </svg>
-                  </button>
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-light mr-1"
-                    onClick={() => this.deleteClick(task.id)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-trash3-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div
-          className="modal fade"
-          id="exampleModal"
-          tabIndex="-1"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog modal-lg modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{modalTitle}</h5>
+              <div className="p-2 w-50 bd-highlight">
+                <img
+                  width="250px"
+                  height="250px"
+                  src={userPhotoPath + userPhotoFileName}
+                />
+                <input
+                  className="m-2"
+                  type="file"
+                  onChange={this.profileImageUpload}
+                ></input>
                 <button
                   type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  arial-label="Close"
-                ></button>
+                  className="btn btn-primary"
+                  onClick={() => this.logoutClick()}
+                >
+                  Logout
+                </button>
               </div>
 
-              <div className="modal-body">
-                <div className="input-group mb-3">
-                  <table>
-                  <thead>
+              <table className="table table-stripped">
+                <thead>
                   <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {statuses.map((status) => (
+                    <tr key={status.status}>
+                      <td>
+                        {status.status === "In Progress" ? (
+                          <p style={{ color: "red", fontWeight: "bold" }}>
+                            {status.status}
+                          </p>
+                        ) : null}
+                        {status.status === "Completed" ? (
+                          <p style={{ color: "green", fontWeight: "bold" }}>
+                            {status.status}
+                          </p>
+                        ) : null}
+                        {status.status === "Pending" ? (
+                          <p style={{ color: "purple", fontWeight: "bold" }}>
+                            {status.status}
+                          </p>
+                        ) : null}
+                      </td>
+                      <td>{status.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <table className="table table-stripped">
+                <button
+                  type="button"
+                  className="btn btn-light mr-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  onClick={() => this.addClick()}
+                >
+                  Add Task
+                </button>
+                <thead>
+                  <tr>
+                    <th>Task ID</th>
                     <th>Name</th>
                     <th>Status</th>
                     <th>Type</th>
                     <th>Priority</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Name"
-                    value={taskName}
-                    onChange={this.editTaskName}
-                    required
-                  />
-                    </td>
-                    
-                    <td>
-                    <select value={taskStatus} onChange={this.editTaskStatus}>
-                    <option value=""></option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-                    </td>
-                    <td>
-
-                    <select value={taskType} onChange={this.editTaskType}>
-                    <option value=""></option>
-                    <option value="Bug">Bug</option>
-                    <option value="Epic">Epic</option>
-                    <option value="Spike">Spike</option>
-                    <option value="Task">Task</option>
-                  </select>
-                    </td>
-                    <td>
-                    <select value={taskPriority} onChange={this.editTaskPriority}>
-                    <option value=""></option>
-                    <option value="Minor">Minor</option>
-                    <option value="Moderate">Moderate</option>
-                    <option value="Major">Major</option>
-                    <option value="Critical">Critical</option>
-                  </select>
-                  </td>
-                  <td>
-                  {taskID == 0 ? (
-                    <button
-                      type="button"
-                      className="btn btn-primary float-start"
-                      onClick={() => this.createClick()}
-                    >
-                      Create
-                    </button>
-                  ) : null}
-
-                  </td>
-                  <td>
-                  {taskID != 0 ? (
-                    <button
-                      type="button"
-                      className="btn btn-primary float-start"
-                      onClick={() => this.updateClick()}
-                    >
-                      Update
-                    </button>
-                  ) : null}
-                  </td>
-                    
-                  </tr>
+                  {tasks.map((task) => (
+                    <tr key={task.id}>
+                      <td>{task.id}</td>
+                      <td>{task.name}</td>
+                      <td>
+                        {task.status === "In Progress" ? (
+                          <p style={{ color: "red", fontWeight: "bold" }}>
+                            {task.status}
+                          </p>
+                        ) : null}
+                        {task.status === "Completed" ? (
+                          <p style={{ color: "green", fontWeight: "bold" }}>
+                            {task.status}
+                          </p>
+                        ) : null}
+                        {task.status === "Pending" ? (
+                          <p style={{ color: "purple", fontWeight: "bold" }}>
+                            {task.status}
+                          </p>
+                        ) : null}
+                      </td>
+                      <td>{task.type}</td>
+                      <td>{task.priority}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-light mr-1"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          onClick={() => this.editClick(task)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-pencil-square"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path
+                              fill-rule="evenodd"
+                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                            />
+                          </svg>
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-light mr-1"
+                          onClick={() => this.deleteClick(task.id)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-trash3-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
-                  </table>
+              </table>
 
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Description"
-                    value={taskDescription}
-                    onChange={this.editTaskDescription}
-                    required
-                  />
+              <div
+                className="modal fade"
+                id="exampleModal"
+                tabIndex="-1"
+                aria-hidden="true"
+              >
+                <div className="modal-dialog modal-lg modal-dialog-centered">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title">{modalTitle}</h5>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        data-bs-dismiss="modal"
+                        arial-label="Close"
+                      ></button>
+                    </div>
 
+                    <div className="modal-body">
+                      <div className="input-group mb-3">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Status</th>
+                              <th>Type</th>
+                              <th>Priority</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Name"
+                                  value={taskName}
+                                  onChange={this.editTaskName}
+                                  required
+                                />
+                              </td>
 
+                              <td>
+                                <select
+                                  value={taskStatus}
+                                  onChange={this.editTaskStatus}
+                                >
+                                  <option value=""></option>
+                                  <option value="In Progress">
+                                    In Progress
+                                  </option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Completed">Completed</option>
+                                </select>
+                              </td>
+                              <td>
+                                <select
+                                  value={taskType}
+                                  onChange={this.editTaskType}
+                                >
+                                  <option value=""></option>
+                                  <option value="Bug">Bug</option>
+                                  <option value="Epic">Epic</option>
+                                  <option value="Spike">Spike</option>
+                                  <option value="Task">Task</option>
+                                </select>
+                              </td>
+                              <td>
+                                <select
+                                  value={taskPriority}
+                                  onChange={this.editTaskPriority}
+                                >
+                                  <option value=""></option>
+                                  <option value="Minor">Minor</option>
+                                  <option value="Moderate">Moderate</option>
+                                  <option value="Major">Major</option>
+                                  <option value="Critical">Critical</option>
+                                </select>
+                              </td>
+                              <td>
+                                {taskID == 0 ? (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary float-start"
+                                    onClick={() => this.createClick()}
+                                  >
+                                    Create
+                                  </button>
+                                ) : null}
+                              </td>
+                              <td>
+                                {taskID != 0 ? (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary float-start"
+                                    onClick={() => this.updateClick()}
+                                  >
+                                    Update
+                                  </button>
+                                ) : null}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-
-
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Description"
+                          value={taskDescription}
+                          onChange={this.editTaskDescription}
+                          required
+                        />
+                      </div>
+                      {taskName <= 5 && (
+                        <p>Name must be at least 5 characters long</p>
+                      )}
+                      {taskDescription <= 5 && (
+                        <p>Description must be at least 5 characters long</p>
+                      )}
+                      {taskStatus == 0 && <p>Status must be selected</p>}
+                      {taskType == 0 && (
+                        <p>Type must be at least 5 characters long</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                {taskName <= 5 && (
-                  <p>Name must be at least 5 characters long</p>
-                )}
-                {taskDescription <= 5 && (
-                  <p>Description must be at least 5 characters long</p>
-                )}
-                {taskStatus == 0 && <p>Status must be selected</p>}
-                {taskType == 0 && (
-                  <p>Type must be at least 5 characters long</p>
-                )}
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     );
