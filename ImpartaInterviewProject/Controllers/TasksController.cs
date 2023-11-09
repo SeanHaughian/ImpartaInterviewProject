@@ -30,9 +30,9 @@ namespace ImpartaInterviewProject.Controllers
 		}
 
 		[HttpGet]
-		public JsonResult GetAll()
+		public JsonResult GetAll(Guid userID)
 		{
-			var tasks = _context.Tasks.ToList();
+			var tasks = _context.Tasks.Where(x=>x.UserID.Equals(userID));
 
 			var statuses = tasks.GroupBy(p => p.Status)
 				.Select(group => new

@@ -26,14 +26,16 @@ export class Tasks extends Component {
   }
 
   refreshList() {
-    fetch(variables.API_URL + "tasks")
+    let tokenID = window.localStorage.getItem("token");
+
+    fetch(variables.API_URL + "tasks?userID="+tokenID)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ tasks: data.tasks });
         this.setState({ statuses: data.statuses });
       });
 
-      fetch(variables.API_URL + "user?id="+window.localStorage.getItem("token"))
+      fetch(variables.API_URL + "user?id="+tokenID)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ userID: data.id });
@@ -108,6 +110,7 @@ export class Tasks extends Component {
         status: this.state.taskStatus,
         type: this.state.taskType,
         priority: this.state.taskPriority,
+        userID: this.state.userID
       }),
     })
       .then((res) => res.json())
