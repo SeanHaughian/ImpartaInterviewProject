@@ -139,6 +139,13 @@ export class Tasks extends Component {
     return true;
   }
 
+  logoutClick() {
+    window.localStorage.setItem("isLoggedIn", false)
+              this.props.history.push({
+                  pathname: '/login',
+                });
+  }
+
   updateClick() {
     if (!this.isInputValid()) {
       return;
@@ -243,6 +250,11 @@ export class Tasks extends Component {
                         src={userPhotoPath+userPhotoFileName}
                     />
                     <input className="m-2" type="file" onChange={this.profileImageUpload}></input>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => this.logoutClick()}
+                  >Logout</button>   
                     </div>
             
         <table className="table table-stripped">

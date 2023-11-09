@@ -30,12 +30,12 @@ export class Login extends Component {
         (result) => {
             if (result==-1)
             {
-                alert(result);
+                alert("Invalid login attempt");
             }
             else
             {
               window.localStorage.setItem("token", result.id);
-              window.localStorage.setItem("isLoggedIn", result)
+              window.localStorage.setItem("isLoggedIn", true)
               this.props.history.push({
                   pathname: '/tasks',
                 });
@@ -84,7 +84,8 @@ export class Login extends Component {
                       type="button"
                       className="btn btn-primary"
                       onClick={() => this.loginClick()}
-                  >Login</button>                        <NavLink to={'/register'} className="btn btn-danger">New User</NavLink>
+                  >Login</button>                        
+                  <NavLink to={'/register'} className="btn btn-danger">New User</NavLink>
                     </div>
                 </div>
         </div>
