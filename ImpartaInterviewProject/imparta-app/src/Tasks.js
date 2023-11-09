@@ -18,7 +18,7 @@ export class Tasks extends Component {
       userID: this.props.history.location.state,
       userEmail: "",
       userPhotoFileName: "",
-      userPhotoPath: variables.PHOTO_URL
+      userPhotoPath: variables.PHOTOS_URL
     };
   }
 
@@ -33,7 +33,6 @@ export class Tasks extends Component {
       fetch(variables.API_URL + "user?id="+1)
       .then((response) => response.json())
       .then((data) => {
-          console.log(data);
         this.setState({ userID: data.id });
         this.setState({ userEmail: data.email });
         this.setState({ userPhotoFileName: data.photofilename });
@@ -190,13 +189,13 @@ export class Tasks extends Component {
     const formData=new FormData();
     formData.append("file",e.target.files[0],e.target.files[0].name);
 
-    fetch(variables.API_URL+'employee/savefile',{
+    fetch(variables.API_URL+'user/SaveProfilePhoto',{
         method:'POST',
         body:formData
     })
     .then(res=>res.json())
     .then(data=>{
-        this.setState({PhotoFileName:data});
+        this.setState({userPhotoFileName:data});
     })
 }
   render() {
@@ -218,6 +217,7 @@ export class Tasks extends Component {
                     <h1>Welcome back {userEmail}</h1>
 
                     <div className="p-2 w-50 bd-highlight">
+                        <p>{userPhotoPath}{userPhotoFileName}</p>
                     <img width="250px" height="250px"
                         src={userPhotoPath+userPhotoFileName}
                     />
