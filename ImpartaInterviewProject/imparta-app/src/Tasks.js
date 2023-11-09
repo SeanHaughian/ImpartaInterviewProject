@@ -11,6 +11,7 @@ export class Tasks extends Component {
       user: "",
       modalTitle: "",
       taskID: "",
+      taskName: "",
       taskDescription: "",
       taskStatus: "",
       taskType: "",
@@ -47,6 +48,7 @@ export class Tasks extends Component {
     this.setState({
       modalTitle: "Add Task",
       taskID: 0,
+      taskName: null,
       taskDescription: null,
       taskStatus: "",
       taskType: "",
@@ -58,12 +60,17 @@ export class Tasks extends Component {
     this.setState({
       modalTitle: "Edit Task",
       taskID: task.id,
+      taskName: task.name,
       taskDescription: task.description,
       taskStatus: task.status,
       taskType: task.type,
       taskPriority: task.priority,
     });
   }
+
+  editTaskName = (e) => {
+    this.setState({ taskName: e.target.value });
+  };
 
   editTaskDescription = (e) => {
     this.setState({ taskDescription: e.target.value });
@@ -92,6 +99,7 @@ export class Tasks extends Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        name: this.state.taskName,
         description: this.state.taskDescription,
         status: this.state.taskStatus,
         type: this.state.taskType,
@@ -136,6 +144,7 @@ export class Tasks extends Component {
       },
       body: JSON.stringify({
         id: this.state.taskID,
+        name: this.state.taskName,
         description: this.state.taskDescription,
         status: this.state.taskStatus,
         type: this.state.taskType,
@@ -164,6 +173,7 @@ export class Tasks extends Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: this.state.taskName,
           description: this.state.taskDescription,
           status: this.state.taskStatus,
           type: this.state.taskType,
@@ -203,6 +213,7 @@ export class Tasks extends Component {
       tasks,
       modalTitle,
       taskID,
+      taskName,
       taskDescription,
       taskStatus,
       taskType,
@@ -268,18 +279,21 @@ export class Tasks extends Component {
           </button>
           <thead>
             <tr>
-              <th>Task ID</th>
-              <th>Description</th>
+            <th>Task ID</th>
+              <th>Name</th>
               <th>Status</th>
               <th>Type</th>
               <th>Priority</th>
+              <th></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {tasks.map((task) => (
               <tr key={task.id}>
                 <td>{task.id}</td>
-                <td>{task.description}</td>
+                <td>{task.name}</td>
                 <td>
                   {task.status === "In Progress" ? (
                     <p style={{ color: "red", fontWeight: "bold" }}>
@@ -366,34 +380,57 @@ export class Tasks extends Component {
 
               <div className="modal-body">
                 <div className="input-group mb-3">
-                  <input
+                  <table>
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+
+                    <input
                     type="text"
                     className="form-control"
-                    placeholder="Description"
-                    value={taskDescription}
-                    onChange={this.editTaskDescription}
+                    placeholder="Name"
+                    value={taskName}
+                    onChange={this.editTaskName}
                     required
                   />
-                  <select value={taskStatus} onChange={this.editTaskStatus}>
+                    </td>
+                    
+                    <td>
+                    <select value={taskStatus} onChange={this.editTaskStatus}>
                     <option value=""></option>
                     <option value="In Progress">In Progress</option>
                     <option value="Pending">Pending</option>
                     <option value="Completed">Completed</option>
                   </select>
-                  <select value={taskType} onChange={this.editTaskType}>
+                    </td>
+                    <td>
+
+                    <select value={taskType} onChange={this.editTaskType}>
                     <option value=""></option>
                     <option value="Bug">Bug</option>
                     <option value="Epic">Epic</option>
                     <option value="Spike">Spike</option>
                     <option value="Task">Task</option>
                   </select>
-                  <select value={taskPriority} onChange={this.editTaskPriority}>
+                    </td>
+                    <td>
+                    <select value={taskPriority} onChange={this.editTaskPriority}>
                     <option value=""></option>
                     <option value="Minor">Minor</option>
                     <option value="Moderate">Moderate</option>
                     <option value="Major">Major</option>
                     <option value="Critical">Critical</option>
                   </select>
+                  </td>
+                  <td>
                   {taskID == 0 ? (
                     <button
                       type="button"
@@ -404,6 +441,8 @@ export class Tasks extends Component {
                     </button>
                   ) : null}
 
+                  </td>
+                  <td>
                   {taskID != 0 ? (
                     <button
                       type="button"
@@ -413,7 +452,29 @@ export class Tasks extends Component {
                       Update
                     </button>
                   ) : null}
+                  </td>
+                    
+                  </tr>
+                </tbody>
+                  </table>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Description"
+                    value={taskDescription}
+                    onChange={this.editTaskDescription}
+                    required
+                  />
+
+
+
+
+
                 </div>
+                {taskName <= 5 && (
+                  <p>Name must be at least 5 characters long</p>
+                )}
                 {taskDescription <= 5 && (
                   <p>Description must be at least 5 characters long</p>
                 )}

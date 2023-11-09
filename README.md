@@ -1,8 +1,11 @@
 CREATE TABLE [dbo].[Users] (
-    [ID]          INT            IDENTITY (1, 1) NOT NULL,
-    [Email] NVARCHAR (50) NOT NULL,
-    [Password]      NVARCHAR (50) NOT NULL,
-    CONSTRAINT [PK_Users_ID] PRIMARY KEY CLUSTERED ([ID] ASC)
+    [ID]				UNIQUEIDENTIFIER DEFAULT (newid()) NULL,
+    [Firstname]			NVARCHAR (255)    NOT NULL,
+    [Surname]			NVARCHAR (255)    NOT NULL,
+    [Email]				NVARCHAR (255)    NOT NULL,
+	[EmailHash]			NVARCHAR (255)    NOT NULL,
+    [Password]			NVARCHAR (255)    NOT NULL,
+	[PhotoFileName]     NVARCHAR (500)    NOT NULL
 );
 
 CREATE TABLE [dbo].[Tasks] (

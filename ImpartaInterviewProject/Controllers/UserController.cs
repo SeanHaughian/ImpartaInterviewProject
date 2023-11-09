@@ -84,7 +84,7 @@ namespace ImpartaInterviewProject.Controllers
 		}
 
 		[HttpGet]
-		public JsonResult GetUser(int id)
+		public JsonResult GetUser(Guid id)
 		{
 			var user = _context.Users.Where(x => x.ID == id).FirstOrDefault();
 			return new JsonResult(user);

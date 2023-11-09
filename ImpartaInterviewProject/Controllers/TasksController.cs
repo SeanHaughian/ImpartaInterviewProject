@@ -70,6 +70,7 @@ namespace ImpartaInterviewProject.Controllers
 			try
 			{
 				var task = GetTaskById(updatedTask.ID);
+				task.Name = updatedTask.Name;
 				task.Description = updatedTask.Description;
 				task.Priority = updatedTask.Priority;
 				task.Status = updatedTask.Status;
