@@ -3,13 +3,14 @@ CREATE TABLE [dbo].[Users] (
     [Firstname]			NVARCHAR (255)    NOT NULL,
     [Surname]			NVARCHAR (255)    NOT NULL,
     [Email]				NVARCHAR (255)    NOT NULL,
-	[EmailHash]			NVARCHAR (255)    NOT NULL,
     [Password]			NVARCHAR (255)    NOT NULL,
-	[PhotoFileName]     NVARCHAR (500)    NOT NULL
+    [PhotoFileName]     NVARCHAR (500)    NULL
 );
 
 CREATE TABLE [dbo].[Tasks] (
-    [ID]          INT            IDENTITY (1, 1) NOT NULL,
+    [ID]          INT   IDENTITY (1, 1) NOT NULL,
+    [UserID]      UNIQUEIDENTIFIER DEFAULT (newid()) NULL,
+    [Name]        NVARCHAR (255) NOT NULL,
     [Description] NVARCHAR (255) NOT NULL,
     [Status]      NVARCHAR (255) NOT NULL,
     [Type]        NVARCHAR (255) NOT NULL,

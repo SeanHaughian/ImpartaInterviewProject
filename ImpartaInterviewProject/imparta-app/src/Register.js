@@ -7,6 +7,8 @@ export class Register extends Component {
     super(props);
 
     this.state = {
+      firstname: "",
+      surname: "",
       email: "",
       password: "",
       proceedLogin: ""
@@ -21,6 +23,8 @@ export class Register extends Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        firstname: this.state.firstname,
+        surname: this.state.surname,
         email: this.state.email,
         password: this.state.password,
       }),
@@ -36,6 +40,15 @@ export class Register extends Component {
       );
   }
 
+  firstnamechange = (e) => {
+    this.setState({ firstname: e.target.value });
+  };
+
+  surnamechange = (e) => {
+        this.setState({ surname: e.target.value });
+
+      };
+
       emailchange = (e) => {
         this.setState({ email: e.target.value });
       };
@@ -45,8 +58,11 @@ export class Register extends Component {
     
           };
 
+
   render() {
     const {
+      firstname,
+      surname,
       email,
       password
     } = this.state;
@@ -59,6 +75,14 @@ export class Register extends Component {
                       <h1>Registration</h1>
                   </div>
                   <div className="card-body">
+                        <div className="form-group">
+                            <label>Firstname<span className="errmsg">*</span></label>
+                            <input value={firstname} onChange={this.firstnamechange} className="form-control"></input>
+                        </div>
+                        <div className="form-group">
+                            <label>Surname<span className="errmsg">*</span></label>
+                            <input value={surname} onChange={this.surnamechange} className="form-control"></input>
+                        </div>
                         <div className="form-group">
                             <label>User Name <span className="errmsg">*</span></label>
                             <input value={email} onChange={this.emailchange} className="form-control"></input>

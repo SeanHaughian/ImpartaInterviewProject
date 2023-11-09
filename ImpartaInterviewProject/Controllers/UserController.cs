@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ImpartaInterviewProject.Controllers
 {
@@ -33,6 +32,7 @@ namespace ImpartaInterviewProject.Controllers
 		{
 			try
 			{
+				user = HashUser(user);
 				_context.Users.Add(user);
 				_context.SaveChanges();
 				return new JsonResult("Created user successfully. Please login with created credentials");
@@ -48,6 +48,7 @@ namespace ImpartaInterviewProject.Controllers
 		{
 			try
 			{
+				user = HashUser(user);
 				if (!IsValidUser(user))
 				{
 					return new JsonResult(-1);
@@ -96,5 +97,26 @@ namespace ImpartaInterviewProject.Controllers
 				.Users.Where(x => x.Email.Equals(user.Email) && x.Password.Equals(user.Password))
 				.Count() == 1;
         }
+
+		private User HashUser(User user)
+		{
+			var emailHash = this.HashString(user.Email);
+			var passwordHash = this.HashString(user.Password);
+			user.Email = emailHash;
+			user.Password = passwordHash;
+			return user;
+		}
+
+		private string HashString(string text)
+		{
+			string hashStr;
+
+			using (var hmacsha256 = new HMACSHA256(Encoding.UTF8.GetBytes(text)))
+			{
+				var hash = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(text));
+				hashStr = Convert.ToBase64String(hash);
+			}
+			return hashStr;
+		}
 	}
 }
