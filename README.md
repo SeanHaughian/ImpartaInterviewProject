@@ -1,3 +1,10 @@
+CREATE TABLE [dbo].[Users] (
+    [ID]          INT            IDENTITY (1, 1) NOT NULL,
+    [Email] NVARCHAR (50) NOT NULL,
+    [Password]      NVARCHAR (50) NOT NULL,
+    CONSTRAINT [PK_Users_ID] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
 CREATE TABLE [dbo].[Tasks] (
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
     [Description] NVARCHAR (255) NOT NULL,
