@@ -8,12 +8,17 @@ export class Tasks extends Component {
     this.state = {
       tasks: [],
       statuses: [],
+      user: "",
       modalTitle: "",
       taskID: "",
       taskDescription: "",
       taskStatus: "",
       taskType: "",
       taskPriority: "",
+      userID: this.props.history.location.state,
+      userEmail: "",
+      userPhotoFileName: "",
+      userPhotoPath: variables.PHOTO_URL
     };
   }
 
@@ -23,6 +28,15 @@ export class Tasks extends Component {
       .then((data) => {
         this.setState({ tasks: data.tasks });
         this.setState({ statuses: data.statuses });
+      });
+
+      fetch(variables.API_URL + "user?id="+1)
+      .then((response) => response.json())
+      .then((data) => {
+          console.log(data);
+        this.setState({ userID: data.id });
+        this.setState({ userEmail: data.email });
+        this.setState({ userPhotoFileName: data.photofilename });
       });
   }
 
@@ -170,6 +184,21 @@ export class Tasks extends Component {
     }
   }
 
+  profileImageUpload=(e)=>{
+    e.preventDefault();
+
+    const formData=new FormData();
+    formData.append("file",e.target.files[0],e.target.files[0].name);
+
+    fetch(variables.API_URL+'employee/savefile',{
+        method:'POST',
+        body:formData
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        this.setState({PhotoFileName:data});
+    })
+}
   render() {
     const {
       tasks,
@@ -180,9 +209,21 @@ export class Tasks extends Component {
       taskType,
       taskPriority,
       statuses,
+      userEmail,
+      userPhotoFileName,
+      userPhotoPath
     } = this.state;
     return (
       <div>
+                    <h1>Welcome back {userEmail}</h1>
+
+                    <div className="p-2 w-50 bd-highlight">
+                    <img width="250px" height="250px"
+                        src={userPhotoPath+userPhotoFileName}
+                    />
+                    <input className="m-2" type="file" onChange={this.profileImageUpload}></input>
+                    </div>
+            
         <table className="table table-stripped">
           <thead>
             <tr>

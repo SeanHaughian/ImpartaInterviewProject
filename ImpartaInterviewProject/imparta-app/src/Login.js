@@ -10,8 +10,6 @@ export class Login extends Component {
       taskID: "",
       email: "",
       password: "",
-      proceedLogin: "",
-      loginSuccessful: ""
     };
   }
 
@@ -30,33 +28,31 @@ export class Login extends Component {
       .then((res) => res.json())
       .then(
         (result) => {
-            if (result==='true')
+            if (result==-1)
             {
-                this.state.loginSuccessful = true;
-            this.props.history.push('/tasks');
+                alert(result);
             }
             else
             {
-               alert(result);
+                console.log(result);
+                this.props.history.push({
+                    pathname: '/tasks',
+                    state: result,
+                  });
             }
         },
         (error) => {
           alert("Failed");
         }
       );
-       <Redirect to='/tasks' push={true}/>
-
   }
 
   emailupdate = (e) => {
     this.setState({ email: e.target.value });
-    console.log(e.target.value);
   };
 
   passwordupdate = (e) => {
         this.setState({ password: e.target.value });
-        console.log(e.target.value);
-
       };
 
   render() {
@@ -92,11 +88,6 @@ export class Login extends Component {
                     </div>
                 </div>
         </div>
-        {loginSuccessful === 'true'? (
-        <Redirect to="/tasks" push={true}/>
-
-                  ) : null}
-
     </div>
     );
   }
