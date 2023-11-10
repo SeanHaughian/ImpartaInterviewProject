@@ -294,7 +294,6 @@ export class Tasks extends Component {
               <h1>
                 Welcome back {userForename} {userSurname}
               </h1>
-
               <div class="main-table-area">
                 <table class="widget-table">
                   <tr>
@@ -363,11 +362,7 @@ export class Tasks extends Component {
                       </table>
                     </th>
                     <th class="col4">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => this.logoutClick()}
-                      >
+                      <button type="button" className="btn btn-primary" onClick={() => this.logoutClick()}>
                         Logout
                       </button>
                     </th>
