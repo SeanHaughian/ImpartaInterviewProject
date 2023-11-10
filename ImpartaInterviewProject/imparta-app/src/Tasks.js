@@ -291,11 +291,19 @@ changeTasksNameFilter = (e)=>{
         <div>
           {window.localStorage.getItem("isLoggedIn") === "true" ? (
                     <div>
-              <h1>
+
+<h1>
                 Welcome back {userForename} {userSurname}
               </h1>
 
+<div class="main-table-area">
+
+  <table class="widget-table">
+            <tr>
+              <th class="col1">
               <div className="p-2 w-50 bd-highlight">
+              <h4>Change your profile photo:</h4>
+
                 <img
                   width="250px"
                   height="250px"
@@ -306,15 +314,14 @@ changeTasksNameFilter = (e)=>{
                   type="file"
                   onChange={this.profileImageUpload}
                 ></input>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => this.logoutClick()}
-                >
-                  Logout
-                </button>
-              </div>
 
+              </div>
+              </th>
+              <th class="col2">
+
+              </th>
+              <th class="col3">
+                <h4>Status Counts:</h4>
               <table className="table table-stripped">
                 <thead>
                   <tr>
@@ -347,6 +354,31 @@ changeTasksNameFilter = (e)=>{
                   ))}
                 </tbody>
               </table>
+              </th>
+              <th class="col4">
+              <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => this.logoutClick()}
+                >
+                  Logout
+                </button>
+              </th>
+            </tr>
+
+  </table>
+
+
+
+
+
+
+
+              </div>
+
+
+              <div class="main-table-area">
+                <h4>Tasks:</h4>
               <table className="table table-stripped">
                 <thead>
                   <tr>
@@ -479,6 +511,7 @@ changeTasksNameFilter = (e)=>{
                   ))}
                 </tbody>
               </table>
+              </div>
               <div
                 className="modal fade"
                 id="exampleModal"
@@ -499,7 +532,10 @@ changeTasksNameFilter = (e)=>{
 
                     <div className="modal-body">
                       <div className="input-group mb-3">
-                        <table>
+                          <table>
+                            <tr>
+                              <th>
+                              <table>
                           <thead>
                             <tr>
                               <th>Name</th>
@@ -581,10 +617,18 @@ changeTasksNameFilter = (e)=>{
                                 ) : null}
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                              
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
-
-                        <input
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                              <input
                           type="text"
                           className="form-control"
                           placeholder="Description"
@@ -592,6 +636,13 @@ changeTasksNameFilter = (e)=>{
                           onChange={this.editTaskDescription}
                           required
                         />
+                              </th>
+                            </tr>
+                          </table>
+
+
+
+                        
                       </div>
                       {taskName <= 5 && (
                         <p>Name must be at least 5 characters long</p>
