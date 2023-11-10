@@ -22,8 +22,31 @@ export class Tasks extends Component {
       userSurname: "",
       userPhotoPath: variables.PHOTOS_URL,
       userPhotoFileName: "",
+      tasksWithoutFilter:[],
+      tasksIdFilter:"",
+      tasksNameFilter:""
     };
   }
+
+  FilterFn(){
+    var tasksIdFilter=this.state.tasksIdFilter;
+    var tasksNameFilter = this.state.tasksNameFilter;
+    var filteredData=this.state.tasksWithoutFilter.filter(
+        function(el){
+          console.log(el);
+            return el.id?.toString().toLowerCase().includes(
+                tasksIdFilter.toString().trim().toLowerCase()
+            )&&
+            el.name?.toString().toLowerCase().includes(
+                tasksNameFilter.toString().trim().toLowerCase()
+            )
+        }
+    );
+
+    this.setState({tasks:filteredData});
+
+}
+
 
   refreshList() {
     let tokenID = window.localStorage.getItem("token");
@@ -33,6 +56,7 @@ export class Tasks extends Component {
       .then((data) => {
         this.setState({ tasks: data.tasks });
         this.setState({ statuses: data.statuses });
+        this.setState({ tasks:data.tasks, tasksWithoutFilter:data.tasks});
       });
 
     fetch(variables.API_URL + "user?id=" + tokenID)
@@ -223,6 +247,14 @@ export class Tasks extends Component {
       });
   };
 
+  changeTasksIdFilter = (e)=>{
+    this.state.tasksIdFilter=e.target.value;
+    this.FilterFn();
+}
+changeTasksNameFilter = (e)=>{
+    this.state.tasksNameFilter=e.target.value;
+    this.FilterFn();
+}
   render() {
     const {
       tasks,
@@ -314,8 +346,17 @@ export class Tasks extends Component {
                 </button>
                 <thead>
                   <tr>
-                    <th>Task ID</th>
-                    <th>Name</th>
+                    <th>
+                    <input className="form-control m-2"
+            onChange={this.changeTasksIdFilter}
+            placeholder="Filter"/>
+                      Task ID
+                    </th>
+                    <th>
+                    <input className="form-control m-2"
+            onChange={this.changeTasksNameFilter}
+                                            placeholder="Filter" />
+Name                                    </th>
                     <th>Status</th>
                     <th>Type</th>
                     <th>Priority</th>
