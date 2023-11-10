@@ -90,8 +90,8 @@ sortResult(prop,asc){
     this.setState({
       modalTitle: "Add Task",
       taskID: 0,
-      taskName: null,
-      taskDescription: null,
+      taskName: "",
+      taskDescription: "",
       taskStatus: "",
       taskType: "",
       taskPriority: "",
