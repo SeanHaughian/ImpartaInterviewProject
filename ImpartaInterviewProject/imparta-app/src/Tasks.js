@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { variables } from "./Variables.js";
+import "./Tasks.css";
 
 export class Tasks extends Component {
   constructor(props) {
@@ -289,7 +290,7 @@ changeTasksNameFilter = (e)=>{
       <div>
         <div>
           {window.localStorage.getItem("isLoggedIn") === "true" ? (
-            <div>
+                    <div>
               <h1>
                 Welcome back {userForename} {userSurname}
               </h1>
@@ -347,15 +348,6 @@ changeTasksNameFilter = (e)=>{
                 </tbody>
               </table>
               <table className="table table-stripped">
-                <button
-                  type="button"
-                  className="btn btn-light mr-1"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                  onClick={() => this.addClick()}
-                >
-                  Add Task
-                </button>
                 <thead>
                   <tr>
                     <th>
@@ -402,7 +394,18 @@ changeTasksNameFilter = (e)=>{
                     <th>Type</th>
                     <th>Priority</th>
                     <th></th>
-                    <th></th>
+                    <th>
+                    <button
+                  type="button"
+                  className="btn btn-primary"
+                  background-color="green"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  onClick={() => this.addClick()}
+                >
+                  Create a Task +
+                </button>
+                    </th>
                     <th></th>
                   </tr>
                 </thead>
@@ -476,7 +479,6 @@ changeTasksNameFilter = (e)=>{
                   ))}
                 </tbody>
               </table>
-
               <div
                 className="modal fade"
                 id="exampleModal"
