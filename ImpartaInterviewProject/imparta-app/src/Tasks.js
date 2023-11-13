@@ -29,60 +29,6 @@ export class Tasks extends Component {
     };
   }
 
-  FilterFn() {
-    var tasksIdFilter = this.state.tasksIdFilter;
-    var tasksNameFilter = this.state.tasksNameFilter;
-    var filteredData = this.state.tasksWithoutFilter.filter(function (el) {
-      console.log(el);
-      return (
-        el.id
-          ?.toString()
-          .toLowerCase()
-          .includes(tasksIdFilter.toString().trim().toLowerCase()) &&
-        el.name
-          ?.toString()
-          .toLowerCase()
-          .includes(tasksNameFilter.toString().trim().toLowerCase())
-      );
-    });
-
-    this.setState({ tasks: filteredData });
-  }
-
-  sortResult(prop, asc) {
-    var sortedData = this.state.tasksWithoutFilter.sort(function (a, b) {
-      if (asc) {
-        return a[prop] > b[prop] ? 1 : a[prop] < b[prop] ? -1 : 0;
-      } else {
-        return b[prop] > a[prop] ? 1 : b[prop] < a[prop] ? -1 : 0;
-      }
-    });
-
-    this.setState({ tasks: sortedData });
-  }
-
-  refreshList() {
-    let tokenID = window.localStorage.getItem("token");
-
-    fetch(variables.API_URL + "tasks?userID=" + tokenID)
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({ tasks: data.tasks });
-        this.setState({ statuses: data.statuses });
-        this.setState({ tasks: data.tasks, tasksWithoutFilter: data.tasks });
-      });
-
-    fetch(variables.API_URL + "user?id=" + tokenID)
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({ userID: data.id });
-        this.setState({ userEmail: data.email });
-        this.setState({ userForename: data.firstname });
-        this.setState({ userSurname: data.surname });
-        this.setState({ userPhotoFileName: data.photoFileName });
-      });
-  }
-
   componentDidMount() {
     this.refreshList();
   }
@@ -99,36 +45,13 @@ export class Tasks extends Component {
     });
   }
 
-  editClick(task) {
-    this.setState({
-      modalTitle: "Edit Task",
-      taskID: task.id,
-      taskName: task.name,
-      taskDescription: task.description,
-      taskStatus: task.status,
-      taskType: task.type,
-      taskPriority: task.priority,
-    });
-  }
-
-  editTaskName = (e) => {
-    this.setState({ taskName: e.target.value });
+  changeTasksIdFilter = (e) => {
+    this.state.tasksIdFilter = e.target.value;
+    this.FilterFn();
   };
-
-  editTaskDescription = (e) => {
-    this.setState({ taskDescription: e.target.value });
-  };
-
-  editTaskStatus = (e) => {
-    this.setState({ taskStatus: e.target.value });
-  };
-
-  editTaskType = (e) => {
-    this.setState({ taskType: e.target.value });
-  };
-
-  editTaskPriority = (e) => {
-    this.setState({ taskPriority: e.target.value });
+  changeTasksNameFilter = (e) => {
+    this.state.tasksNameFilter = e.target.value;
+    this.FilterFn();
   };
 
   createClick() {
@@ -148,58 +71,6 @@ export class Tasks extends Component {
         type: this.state.taskType,
         priority: this.state.taskPriority,
         userID: this.state.userID,
-      }),
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          alert(result);
-          this.refreshList();
-        },
-        (error) => {
-          alert("Failed");
-        }
-      );
-  }
-
-  isInputValid() {
-    if (this.state.taskDescription < 5) {
-      alert("Description is too short. Please enter atleast 5 characters.");
-      return false;
-    } else if (this.state.taskStatus < 1) {
-      alert("Status is too short. Please enter a selection.");
-      return false;
-    } else if (this.state.taskType < 1) {
-      alert("Type is too short. Please enter a selection.");
-      return false;
-    }
-    return true;
-  }
-
-  logoutClick() {
-    window.localStorage.setItem("isLoggedIn", false);
-    this.props.history.push({
-      pathname: "/login",
-    });
-  }
-
-  updateClick() {
-    if (!this.isInputValid()) {
-      return;
-    }
-    fetch(variables.API_URL + "tasks", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: this.state.taskID,
-        name: this.state.taskName,
-        description: this.state.taskDescription,
-        status: this.state.taskStatus,
-        type: this.state.taskType,
-        priority: this.state.taskPriority,
       }),
     })
       .then((res) => res.json())
@@ -244,6 +115,80 @@ export class Tasks extends Component {
     }
   }
 
+
+  editClick(task) {
+    this.setState({
+      modalTitle: "Edit Task",
+      taskID: task.id,
+      taskName: task.name,
+      taskDescription: task.description,
+      taskStatus: task.status,
+      taskType: task.type,
+      taskPriority: task.priority,
+    });
+  }
+
+  editTaskName = (e) => {
+    this.setState({ taskName: e.target.value });
+  };
+
+  editTaskDescription = (e) => {
+    this.setState({ taskDescription: e.target.value });
+  };
+
+  editTaskStatus = (e) => {
+    this.setState({ taskStatus: e.target.value });
+  };
+
+  editTaskType = (e) => {
+    this.setState({ taskType: e.target.value });
+  };
+
+  editTaskPriority = (e) => {
+    this.setState({ taskPriority: e.target.value });
+  };
+  
+  FilterFn() {
+    var tasksIdFilter = this.state.tasksIdFilter;
+    var tasksNameFilter = this.state.tasksNameFilter;
+    var filteredData = this.state.tasksWithoutFilter.filter(function (el) {
+      console.log(el);
+      return (
+        el.id
+          ?.toString()
+          .toLowerCase()
+          .includes(tasksIdFilter.toString().trim().toLowerCase()) &&
+        el.name
+          ?.toString()
+          .toLowerCase()
+          .includes(tasksNameFilter.toString().trim().toLowerCase())
+      );
+    });
+
+    this.setState({ tasks: filteredData });
+  }
+
+  isInputValid() {
+    if (this.state.taskDescription < 5) {
+      alert("Description is too short. Please enter atleast 5 characters.");
+      return false;
+    } else if (this.state.taskStatus < 1) {
+      alert("Status is too short. Please enter a selection.");
+      return false;
+    } else if (this.state.taskType < 1) {
+      alert("Type is too short. Please enter a selection.");
+      return false;
+    }
+    return true;
+  }
+
+  logoutClick() {
+    window.localStorage.setItem("isLoggedIn", false);
+    this.props.history.push({
+      pathname: "/login",
+    });
+  }
+
   profileImageUpload = (e) => {
     e.preventDefault();
 
@@ -260,14 +205,72 @@ export class Tasks extends Component {
       });
   };
 
-  changeTasksIdFilter = (e) => {
-    this.state.tasksIdFilter = e.target.value;
-    this.FilterFn();
-  };
-  changeTasksNameFilter = (e) => {
-    this.state.tasksNameFilter = e.target.value;
-    this.FilterFn();
-  };
+
+  refreshList() {
+    let tokenID = window.localStorage.getItem("token");
+
+    fetch(variables.API_URL + "tasks?userID=" + tokenID)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ tasks: data.tasks });
+        this.setState({ statuses: data.statuses });
+        this.setState({ tasks: data.tasks, tasksWithoutFilter: data.tasks });
+      });
+
+    fetch(variables.API_URL + "user?id=" + tokenID)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ userID: data.id });
+        this.setState({ userEmail: data.email });
+        this.setState({ userForename: data.firstname });
+        this.setState({ userSurname: data.surname });
+        this.setState({ userPhotoFileName: data.photoFileName });
+      });
+  }
+
+  sortResult(prop, asc) {
+    var sortedData = this.state.tasksWithoutFilter.sort(function (a, b) {
+      if (asc) {
+        return a[prop] > b[prop] ? 1 : a[prop] < b[prop] ? -1 : 0;
+      } else {
+        return b[prop] > a[prop] ? 1 : b[prop] < a[prop] ? -1 : 0;
+      }
+    });
+
+    this.setState({ tasks: sortedData });
+  }
+
+  updateClick() {
+    if (!this.isInputValid()) {
+      return;
+    }
+    fetch(variables.API_URL + "tasks", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: this.state.taskID,
+        name: this.state.taskName,
+        description: this.state.taskDescription,
+        status: this.state.taskStatus,
+        type: this.state.taskType,
+        priority: this.state.taskPriority,
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          alert(result);
+          this.refreshList();
+        },
+        (error) => {
+          alert("Failed");
+        }
+      );
+  }
+
   render() {
     const {
       tasks,
