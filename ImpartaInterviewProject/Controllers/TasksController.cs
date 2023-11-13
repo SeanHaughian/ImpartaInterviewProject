@@ -13,7 +13,6 @@ namespace ImpartaInterviewProject.Controllers
 		private readonly IConfiguration _configuration;
 		private readonly Context _context;
 		private readonly ITaskService _taskService;
-
 		public TasksController(IConfiguration configuration, Context context, ITaskService taskService)
 		{
 			_context = context;
