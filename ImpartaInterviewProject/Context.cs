@@ -7,7 +7,9 @@ public class Context : DbContext
 	{
 	}
 
-	public DbSet<User> Users { get; set; }
+	public Context() : base() { }
 
-	public DbSet<Tasks> Tasks { get; set; }
+	public virtual DbSet<User> Users { get; set; }
+
+	public virtual DbSet<Tasks> Tasks { get; set; }
 }
