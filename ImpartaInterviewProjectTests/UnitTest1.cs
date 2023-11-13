@@ -18,15 +18,14 @@ namespace ImpartaInterviewProjectTests
 	public class Tests
 	{
 		private TaskService tasksService;
-		IQueryable<Tasks> tasks;
-		Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>> mockSet;
+		private IQueryable<Tasks> tasks;
 
 		[SetUp]
 		public void Setup()
 		{
 			tasks = GetFakeEmployeeList().AsQueryable();
 
-			mockSet = new Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>>();
+			var mockSet = new Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>>();
 
 
 			mockSet.As<IQueryable<Tasks>>().Setup(m => m.Provider).Returns(tasks.Provider);
@@ -59,11 +58,7 @@ namespace ImpartaInterviewProjectTests
 		[Test]
 		public void AddTask()
 		{
-			
-			var results = tasksService.GetTasksForUser(tasks.First().UserID);
-
-			
-			//var result = tasksService.GetTasksForUser(GetFakeEmployeeList().First().UserID);
+			var results = tasksService.GetTasksForUser(tasks.First().UserID);			
 		}
 	}
 }
