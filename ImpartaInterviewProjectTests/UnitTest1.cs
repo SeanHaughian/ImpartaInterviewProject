@@ -17,11 +17,27 @@ namespace ImpartaInterviewProjectTests
 {
 	public class Tests
 	{
-		private readonly ITaskService tasksService;
+		private TaskService tasksService;
+		IQueryable<Tasks> tasks;
+		Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>> mockSet;
 
 		[SetUp]
 		public void Setup()
 		{
+			tasks = GetFakeEmployeeList().AsQueryable();
+
+			mockSet = new Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>>();
+
+
+			mockSet.As<IQueryable<Tasks>>().Setup(m => m.Provider).Returns(tasks.Provider);
+			mockSet.As<IQueryable<Tasks>>().Setup(m => m.Expression).Returns(tasks.Expression);
+			mockSet.As<IQueryable<Tasks>>().Setup(m => m.ElementType).Returns(tasks.ElementType);
+			mockSet.As<IQueryable<Tasks>>().Setup(m => m.GetEnumerator()).Returns(() => tasks.GetEnumerator());
+
+			var mockContext = new Mock<Context>();
+			mockContext.Setup(c => c.Tasks).Returns(mockSet.Object);
+
+			tasksService = new TaskService(mockContext.Object);
 		}
 
 		private static List<Tasks> GetFakeEmployeeList()
@@ -43,21 +59,8 @@ namespace ImpartaInterviewProjectTests
 		[Test]
 		public void AddTask()
 		{
-			var data = GetFakeEmployeeList().AsQueryable();
-
-			var mockSet = new Mock<Microsoft.EntityFrameworkCore.DbSet<Tasks>>();
-
-
-			mockSet.As<IQueryable<Tasks>>().Setup(m => m.Provider).Returns(data.Provider);
-			mockSet.As<IQueryable<Tasks>>().Setup(m => m.Expression).Returns(data.Expression);
-			mockSet.As<IQueryable<Tasks>>().Setup(m => m.ElementType).Returns(data.ElementType);
-			mockSet.As<IQueryable<Tasks>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
-
-			var mockContext = new Mock<Context>();
-			mockContext.Setup(c => c.Tasks).Returns(mockSet.Object);
-
-			var service = new TaskService(mockContext.Object);
-			var results = service.GetTasksForUser(data.First().UserID);
+			
+			var results = tasksService.GetTasksForUser(tasks.First().UserID);
 
 			
 			//var result = tasksService.GetTasksForUser(GetFakeEmployeeList().First().UserID);
